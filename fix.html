@@ -1,0 +1,597 @@
+<html lang="en">
+<httpProtocol>
+ <customHeaders>
+ <add name="Access-Control-Allow-Origin" value="*" />
+ <add name="Access-Control-Allow-Methods" value="GET, POST" />
+</customHeaders>
+</httpProtocol>
+<style>
+html {
+box-sizing: border-box;
+}
+*, *:before, *:after {
+box-sizing: inherit;
+}
+body {
+height: 100%;
+margin: 0;
+background-color: #0A0;
+color: white;
+font-family: sans-serif;
+overflow: hidden;
+}
+
+/* these don't work on mobile. The tip ends up making the first touch
+go to the tip and only after can the user click the button the
+tip was meant for. I suppose I could try to detect mobile and
+only turn these on if not mobile
+
+[data-tooltip] {
+position: relative;
+}
+
+[data-tooltip]:after {
+z-index: 2;
+font-size: 10pt;
+opacity: 0;
+visibility: hidden;
+position: absolute;
+content: attr(data-tooltip);
+padding: 6px 10px;
+top: 1.4em;
+left: 50%;
+transform: translateX(-50%) translateY(-3em);
+background: rgba(0,0,0,.8);
+color: white;
+white-space: nowrap;
+z-index: 2;
+border-radius: 2px;
+transition: opacity 0.2s cubic-bezier(.64,.09,.08,1), transform 0.2s  cubic-bezier(.64,.09,.08,1);;
+pointer-events: none;
+touch-action: none;
+}
+
+[data-tooltip]:hover:after {
+display: block;
+opacity: 1;
+visibility: visible;
+transform: translateX(-50%) translateY(-4em);
+pointer-events: none;
+touch-action: none;
+}
+
+*/
+
+h1 {
+margin-top: 0;
+}
+a {
+text-decoration: none;
+color: inherit;
+}
+.outer {
+width: 100vw;
+height: 100%;
+
+display: -webkit-flex;
+-webkit-flex-direction: column;
+-webkit-justify-content: space-between;
+
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+position: absolute;
+}
+.toolbar {
+background: rgba(0,0,0,.2);
+
+display: -webkit-flex;
+-webkit-justify-content: space-between;
+-webkit-align-items: stretch;
+
+display: flex;
+justify-content: space-between;
+align-items: stretch;
+}
+.toolbar>div {
+padding: 10px;
+
+display: -webkit-flex;
+-webkit-align-items: center;
+
+display: flex;
+align-items: center;
+}
+.clockarea {
+position: relative;
+gwidth: 100%;
+hheight: 100%;
+
+-webkit-flex: 1 1 auto;
+flex: 1 1 auto;
+}
+.clockarea>div {
+position: absolute;
+width: 100%;
+height: 100%;
+}
+.clockarea .pause {
+background: rgba(0, 0, 0, .8);
+position: absolute;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+
+display: -webkit-flex;
+/* -webkit-align-items: center; */
+/* -webkit-justify-content: center; */
+-webkit-align-items: flex-start;
+-webkit-justify-content: flex-start;
+
+display: flex;
+/* align-items: center; */
+/* justify-content: center; */
+align-items: flex-start;
+justify-content: flex-start;
+}
+.clockarea .pause>div {
+position: absolute;
+width: 100%;
+height: 100%;
+}
+.clockarea .pause img {
+width: 100%;
+height: 100%;
+}
+
+.clockinfo {
+position: absolute;
+width: 100%;
+height: 100%;
+
+display: -webkit-flex;
+-webkit-flex-direction: column;
+-webkit-justify-content: space-between;
+
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+}
+.round-time {
+gbackground: #0E0;
+width: 100%;
+font-weight: bold;
+
+display: -webkit-flex;
+-webkit-flex: 1 1 auto;
+
+display: flex;
+flex: 1 1 auto;
+position: relative;
+}
+.round-time>div {
+position: absolute;
+width: 100%;
+height: 100%;
+
+display: -webkit-flex;
+-webkit-align-items: center;
+-webkit-justify-content: center;
+
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.round-time .clock {
+padding: 30px 10px;
+width: 100%;
+height: 100%;
+}
+.parts {
+display: -webkit-flex;
+-webkit-justify-content: space-between;
+display: flex;
+justify-content: space-between;
+padding: 10px;
+}
+.parts>div {
+-webkit-flex: 1 1 auto;
+flex: 1 1 auto;
+}
+.parts .part-heading {
+font-size: 5vw;
+}
+.parts .value {
+font-size: 8vw;
+}
+.parts .elapsed {
+gbackground: #0A0;
+}
+.parts .rounds {
+gbackground: #090;
+text-align: center;
+}
+.parts .remaining {
+gbackground: #080;
+text-align: right;
+}
+.controls {
+display: -webkit-flex;
+-webkit-justify-content: space-between;
+-webkit-align-items: stretch;
+
+display: flex;
+justify-content: space-between;
+align-items: stretch;
+
+font-size: 6.5vw;
+gborder-top: 1px solid white;
+}
+.controls .reset,
+.controls .start-stop {
+display: -webkit-flex;
+-webkit-align-items: center;
+
+display: flex;
+align-items: center;
+}
+.controls .curnext {
+display: -webkit-flex;
+-webkit-align-items: stretch;
+
+display: flex;
+align-items: stretch;
+}
+.controls>div>div {
+-webkit-flex: 1 1 auto;
+flex: 1 1 auto;
+}
+.controls .reset,
+.controls .start-stop {
+-webkit-flex: 1 1 10%;
+flex: 1 1 10%;
+text-align: center;
+background: rgba(0, 0, 0, .2);
+padding: 5px;
+min-width: 60px;
+}
+.controls .curnext {
+-webkit-flex: 1 1 80%;
+flex: 1 1 80%;
+gbackground: #0FF;
+position: relative;
+}
+.controls .curnext .allouter {
+position: relative;
+width: 80px;
+gbackground: #F0F;
+overflow: hidden;
+}
+.controls .curnext .allouter .all {
+position: absolute;
+width: 100%;
+height: 100%;
+gbackground: #FF0;
+white-space: nowrap;
+font-size: 0;
+transition: transform 0.25s cubic-bezier(0.55, 0.06, 0.68, 0.19);
+
+display: -webkit-flex;
+-webkit-align-items: stretch;
+
+display: flex;
+align-items: stretch;
+}
+.controls .curnext .allouter .all>div {
+font-size: 6.5vw;
+width: 50%;
+
+display: -webkit-flex;
+-webkit-flex: 0 0 50%;
+-webkit-align-items: center;
+
+display: flex;
+flex: 0 0 50%;
+align-items: center;
+}
+.controls .curnext .allouter .all>div>div {
+padding-left: 10px;
+}
+.controls .reset {
+gbackground: #070;
+}
+.controls .curnext .allouter .all>div:nth-child(odd) {
+background: rgba(0, 0, 0, .3);
+}
+.controls .curnext .allouter .all>div:nth-child(even) {
+background: rgba(0, 0, 0, .4);
+}
+.controls .start-stop {
+gbackground: #040;
+}
+
+img {
+width: 100%;
+}
+.about img {
+width: 1em;
+height: 1em;
+}
+
+
+.dialog {
+position: absolute;
+top: 0;
+left: 0;
+width: 100vw;
+height: 100vh;
+background: rgba(0, 0, 0, .8);
+
+display: -webkit-flex;
+display: flex;
+
+-webkit-justify-content: center;
+-webkit-align-items: center;
+
+justify-content: center;
+align-items: center;
+}
+
+.dialog .done,
+.setting label,
+.setting value {
+display: block;
+padding: 2pt;
+}
+
+.dialog .done {
+padding: 10pt;
+text-align: center;
+background: rgba(0, 0, 0, .2);
+}
+
+.setting value {
+display: block;
+padding: 2pt;
+}
+
+.settings .setting {
+margin-bottom: 10pt;
+background: #0A0;
+}
+.dialog>div {
+background: green;
+padding: 1em;
+font-size: 20pt;
+border: 1em solid black;
+max-width: 90%;
+}
+
+.setting input[type="text"] {
+background: rgba(0,0,0,.2);
+border: none;
+font-size: 20pt;
+padding: 2pt;
+width: 100%;
+}
+
+.hover:hover {
+background: rgba(255, 255, 255, 0.3) !important;
+cursor: pointer;
+}
+
+@media (max-aspect-ratio: 1/1) {
+.round-time .clock {
+height: 60vw;
+}
+}
+
+@media (min-aspect-ratio: 840/580) {
+.round-time .clock {
+ gbackground: purple;
+}
+.parts {
+padding: 3px;
+}
+.parts .part-heading {
+font-size: 6vh;
+}
+.parts .value {
+font-size: 11vh;
+}
+.controls {
+font-size: 9vh;
+}
+.controls .curnext .allouter .all>div {
+font-size: 9vh;
+}
+.controls img {
+width: 9vh;
+}
+.toolbar>div {
+font-size: 3vh;
+padding: 5px;
+}
+}
+
+@media (max-width: 850px) {
+h1 {
+ font-size: 24pt;
+}
+p {
+ font-size: 16pt;
+}
+}
+</style>
+<head>
+</head>
+  <meta charset="utf-8">
+  <title>load demo</title>
+  <button id="button">CIK AH</button>
+  <span>Data:</span>
+  <div id="container"> 'Data:' </div>
+
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+<body>
+  <body>
+    <div class="outer">
+      <div class="toolbar">
+        <div class="hover">Next Event:</div>
+      </div>
+      <div class="clockarea">
+        <div>
+          <div class="clockinfo">
+            <div class="round-time">
+              <div>
+                <svg class="clock" preserveAspectRatio="none" viewBox="0 0 1280 720" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;">
+                    <g transform="matrix(36.5429,0,0,81.0554,-22120.3,-33994.9)">
+                        <text text-anchor="middle" id="time" x="622.783px" y="428.14px" style="font-family:'Arial-Black', 'Arial Black', sans-serif;font-weight:900;font-size:12px;fill:white;">00:00</text>
+                    </g>
+                </svg>
+              </div>
+            </div>
+
+            <div class="parts">
+              <div class="elapsed">
+                <div class="part-heading">elapsed</div>
+                <div class="value">00:00</div>
+              </div>
+              <div class="rounds">
+                <div class="part-heading">interval</div>
+                <div class="value">0/0</div>
+              </div>
+              <div class="remaining">
+                <div class="part-heading">remaining</div>
+                <div class="value">00:00</div>
+              </div>
+            </div>
+          </div>
+          <div class="pause" style="display: none;">
+            <div>
+              <img src="images/start.svg" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="hover reset">
+          <div data-tooltip="reset">
+            <img src="images/reset.svg" />
+          </div>
+        </div>
+        <div class="curnext">
+          <div class="allouter">
+            <div class="all">
+            </div>
+          </div>
+        </div>
+        <div class="hover start-stop">
+          <div class="start" data-tooltip="start">
+             <img src="images/start.svg" />
+          </div>
+          <div class="stop" style="display: none;" data-tooltip="stop">
+             <img src="images/stop.svg" />
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="settings dialog" style="display: none;">
+      <div>
+        <div class="values"></div>
+        <div class="done hover">done</div>
+      </div>
+    </div>
+    <div class="about dialog" style="display: none;">
+      <div>
+        <div class="desc">
+          <h1>An Interval Timer</h1>
+          <p>
+           Reset: <img src="images/reset.svg" />
+           Start: <img src="images/start.svg" />
+           Stop: <img src="images/stop.svg" />
+          </p>
+          <p>On iOS/Android click the share icon
+          <img src="images/share.svg" />
+          and select "Add to Home Screen" for a better experience.
+          </p>
+          <p><a target="_blank" href="https://github.com/greggman/interval-timer/"><img src="images/octocat.svg" /></a>
+          </p>
+        </div>
+        <div class="done hover">done</div>
+      </div>
+    </div>
+  </body>
+<!-- <b>Projects:</b>
+<ol id="new-projects"></ol> -->
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+<script type="text/javascript">
+var num = [];
+var nama_event = 0;
+function startTimer(duration, display) {
+    var timer = duration, minutes, seconds;
+    setInterval(function () {
+
+
+
+        minutes = parseInt(timer / 60, 10)
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = minutes + ":" + seconds;
+
+        if (--timer <= 0) {
+            timer = duration;
+            $.ajax({
+                url: "http://localhost:8000/get.php",
+                type: 'GET',
+                dataType: "JSON",
+                data: 'data',
+                async: false,
+                success: function (data) {
+                    var result = data.split(';').map(e => e.split(','));
+                     nama_event = parseInt(result[2]);
+                    $('#container').html(data);
+                    // $('#container').val(data);
+                    console.log(nama_event);
+                    // alert(data);
+                }
+            });
+            startTimer(nama_event, display);
+        }
+    }, 1000);
+}
+
+window.onload = func1 = function () {
+  $.ajax({
+      url: "http://localhost:8000/get.php",
+      type: 'GET',
+      dataType: "JSON",
+      data: 'data',
+      async: false,
+      success: function (data) {
+          var result = data.split(';').map(e => e.split(','));
+           nama_event = parseInt(result[2]);
+          $('#container').html(data);
+          // $('#container').val(data);
+          console.log(nama_event);
+          // alert(data);
+      }
+  });
+    var fiveMinutes = 60 * 5,
+        display = document.querySelector('#time');
+    startTimer(nama_event, display);
+};
+setInterval(test,500);
+  function test(){
+
+  }
+
+
+// });
+</script>
