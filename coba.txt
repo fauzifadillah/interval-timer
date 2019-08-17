@@ -1,3 +1,0 @@
-1; Pembukaan; 11;
-2; Keynote; 30;
-3; Event Dummy; 100;

@@ -15,10 +15,13 @@ box-sizing: inherit;
 body {
 height: 100%;
 margin: 0;
-background-color: #0A0;
-color: white;
-font-family: sans-serif;
+background-color: #92DFF3;
+color: White;
+font-family: HelveticaNeue-Light;
 overflow: hidden;
+-webkit-transition: background 1.0s ease-in-out;
+       -ms-transition:     background 1.0s ease-in-out;
+       transition:         background 1.0s ease-in-out;
 }
 
 /* these don't work on mobile. The tip ends up making the first touch
@@ -83,7 +86,7 @@ justify-content: space-between;
 position: absolute;
 }
 .toolbar {
-background: rgba(0,0,0,.2);
+background: #006B93;
 
 display: -webkit-flex;
 -webkit-justify-content: space-between;
@@ -112,6 +115,7 @@ flex: 1 1 auto;
 }
 .clockarea>div {
 position: absolute;
+background: ;
 width: 100%;
 height: 100%;
 }
@@ -427,10 +431,9 @@ p {
 <head>
 </head>
   <meta charset="utf-8">
-  <title>load demo</title>
-  <button id="button">CIK AH</button>
-  <span>Data:</span>
-  <div id="container"> 'Data:' </div>
+  <title>TIMER | JP GLOBAL TRANSTECH</title>
+  <!-- <button id="button">CIK AH</button> -->
+
 
   <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 
@@ -438,7 +441,8 @@ p {
   <body>
     <div class="outer">
       <div class="toolbar">
-        <div class="hover">Next Event:</div>
+        <div style="font-size:40;">Next Event: <br><span id="container"></div><span style="font-size:40;margin-top:18px" class="waktu_event" id="waktu_event"></span><img src="images/jp2.png" style="width:300px;height:86px;padding:10px;">
+
       </div>
       <div class="clockarea">
         <div>
@@ -447,16 +451,16 @@ p {
               <div>
                 <svg class="clock" preserveAspectRatio="none" viewBox="0 0 1280 720" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;">
                     <g transform="matrix(36.5429,0,0,81.0554,-22120.3,-33994.9)">
-                        <text text-anchor="middle" id="time" x="622.783px" y="428.14px" style="font-family:'Arial-Black', 'Arial Black', sans-serif;font-weight:900;font-size:12px;fill:white;">00:00</text>
+                        <text text-anchor="middle" id="time" x="622.783px" y="428.14px" style="font-family:'HelveticaNeue-Light', 'HelveticaNeue-Light', sans-serif;font-weight:900;font-size:12px;fill:white;">00:00</text>
                     </g>
                 </svg>
               </div>
             </div>
 
-            <div class="parts">
-              <div class="elapsed">
+            <!-- <div class="parts">
+              <div class="rounds">
                 <div class="part-heading">elapsed</div>
-                <div class="value">00:00</div>
+                <div id="labas" class="value">00:00</div>
               </div>
               <div class="rounds">
                 <div class="part-heading">interval</div>
@@ -466,63 +470,101 @@ p {
                 <div class="part-heading">remaining</div>
                 <div class="value">00:00</div>
               </div>
-            </div>
+            </div> -->
           </div>
-          <div class="pause" style="display: none;">
+          <!-- <div class="pause" onclick="pause()"style="display: none;">
             <div>
               <img src="images/start.svg" />
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="controls">
+        <!-- <div class="hover reset">
+          <div onclick=pause(); data-tooltip="reset">
+            <img src="images/stop.svg" />
+          </div>
+        </div> -->
         <div class="hover reset">
-          <div data-tooltip="reset">
-            <img src="images/reset.svg" />
+          <div onclick=elapsed(); data-tooltip="reset">
+            <svg
+             xmlns:dc="http://purl.org/dc/elements/1.1/"
+             xmlns:cc="http://creativecommons.org/ns#"
+             xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:svg="http://www.w3.org/2000/svg"
+             xmlns="http://www.w3.org/2000/svg"
+             id="play-icon"
+             version="1.1"
+             height="50"
+             width="50"
+             viewBox="0 0 1200 1200">
+            <path
+               d="M 600,1200 C 268.65,1200 0,931.35 0,600 0,268.65 268.65,0 600,0 c 331.35,0 600,268.65 600,600 0,331.35 -268.65,600 -600,600 z M 450,300.45 450,899.55 900,600 450,300.45 z"
+               id="path16995" />
+          </svg>
+
+
+          </div>
+        </div>
+        <div class="hover reset">
+          <div onclick=stop_timer(); data-tooltip="reset">
+            <svg
+             xmlns:dc="http://purl.org/dc/elements/1.1/"
+             xmlns:cc="http://creativecommons.org/ns#"
+             xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:svg="http://www.w3.org/2000/svg"
+             xmlns="http://www.w3.org/2000/svg"
+             id="pause-icon"
+             version="1.1"
+             height="50"
+             width="50"
+             viewBox="0 0 1200 1200">
+            <path
+               id="path15778"
+               d="M 600,0 C 268.62914,0 0,268.62914 0,600 c 0,331.37086 268.62914,600 600,600 331.37086,0 600,-268.62914 600,-600 C 1200,268.62914 931.37086,0 600,0 z m -269.16515,289.38 181.71397,0 0,621.24 -181.71397,0 0,-621.24 z m 356.61633,0 181.71399,0 0,621.24 -181.71399,0 0,-621.24 z" />
+          </svg>
           </div>
         </div>
         <div class="curnext">
-          <div class="allouter">
+          <!-- <div class="allouter">
             <div class="all">
             </div>
+          </div> -->
+
+          <div class="hover">
+            <div style="padding:5px; text-align:center" onclick=prev_event(); data-tooltip="reset">
+            Back
+            </div>
           </div>
+          <div class="hover">
+            <div style="padding:5px; text-align:center" onclick=next_event(); data-tooltip="reset">
+              Next
+            </div>
+          </div>
+
         </div>
+
         <div class="hover start-stop">
-          <div class="start" data-tooltip="start">
+          <div onclick=resume(); class="start" data-tooltip="start">
              <img src="images/start.svg" />
           </div>
           <div class="stop" style="display: none;" data-tooltip="stop">
              <img src="images/stop.svg" />
           </div>
         </div>
+        <div class="hover reset">
+          <div onclick=pause(); data-tooltip="reset">
+            <img src="images/stop.svg" />
+          </div>
+        </div>
+
+
+
       </div>
 
     </div>
-    <div class="settings dialog" style="display: none;">
-      <div>
-        <div class="values"></div>
-        <div class="done hover">done</div>
-      </div>
-    </div>
-    <div class="about dialog" style="display: none;">
-      <div>
-        <div class="desc">
-          <h1>An Interval Timer</h1>
-          <p>
-           Reset: <img src="images/reset.svg" />
-           Start: <img src="images/start.svg" />
-           Stop: <img src="images/stop.svg" />
-          </p>
-          <p>On iOS/Android click the share icon
-          <img src="images/share.svg" />
-          and select "Add to Home Screen" for a better experience.
-          </p>
-          <p><a target="_blank" href="https://github.com/greggman/interval-timer/"><img src="images/octocat.svg" /></a>
-          </p>
-        </div>
-        <div class="done hover">done</div>
-      </div>
-    </div>
+
+
   </body>
 <!-- <b>Projects:</b>
 <ol id="new-projects"></ol> -->
@@ -531,11 +573,15 @@ p {
 <script type="text/javascript">
 var num = [];
 var nama_event = 0;
+i = 0;
+j = 4;
+k = 5;
+duration = 0;
+minutes = 0;
+seconds = 0;
 function startTimer(duration, display) {
-    var timer = duration, minutes, seconds;
-    setInterval(function () {
-
-
+     timer = duration, minutes, seconds;
+    start = setInterval(function () {
 
         minutes = parseInt(timer / 60, 10)
         seconds = parseInt(timer % 60, 10);
@@ -544,27 +590,217 @@ function startTimer(duration, display) {
         seconds = seconds < 10 ? "0" + seconds : seconds;
 
         display.textContent = minutes + ":" + seconds;
-
-        if (--timer <= 0) {
-            timer = duration;
-            $.ajax({
+        --timer;
+        $.ajax({
                 url: "http://localhost:8000/get.php",
                 type: 'GET',
                 dataType: "JSON",
                 data: 'data',
                 async: false,
                 success: function (data) {
-                    var result = data.split(';').map(e => e.split(','));
+                    result = data.split(';').map(e => e.split(','));
+                    xstring = data.split(';');
                      nama_event = parseInt(result[2]);
-                    $('#container').html(data);
-                    // $('#container').val(data);
-                    console.log(nama_event);
+                     datas = JSON.stringify(data);
+
+                    console.log(xstring[j+3]);
+
                     // alert(data);
                 }
             });
-            startTimer(nama_event, display);
+          // var i = 0;
+            document.body.style.backgroundColor = "#7AD7F0";
+          if (timer <= 29){
+            setTimeout(function(){
+                document.body.style.backgroundColor = "#800000";
+             },500)
+             document.body.style.backgroundColor = "red";
+          }
+        if (timer <= 0){
+          timer = 60*parseInt(result[5+i]);
+          $('#container').html(xstring[j+3]);
+          if (xstring[k+3] == null){
+          $('.waktu_event').html("");
+          } else {
+          $('.waktu_event').html(xstring[k+3]+" minutes");
+          }
+
+          // i=i+3;
+          // j=j+3;
+          // k=k+3;
+          elapsed();
         }
+
+          // if (--timer < 0 ) {
+          //
+          //     $.ajax({
+          //         url: "http://localhost:8000/get.php",
+          //         type: 'GET',
+          //         dataType: "JSON",
+          //         data: 'data',
+          //         async: false,
+          //         success: function (data) {
+          //             result = data.split(';').map(e => e.split(','));
+          //              nama_event = parseInt(result[2]);
+          //             $('#container').html(data);
+          //             console.log(nama_event);
+          //
+          //             // alert(data);
+          //         }
+          //     });
+          //     // loops();
+          //     var i = 0;
+          //     var i = i+3;
+          //     timer = parseInt(result[5+i]);
+          //     // function log(i){
+          //     //     console.log(result[i]);
+          //     //     if (i<result.length){
+          //     //     setTimeout(function(){
+          //     //         i++;
+          //     //         log(i);
+          //     //     },result[i]*1000);
+          //     //     }
+          //     // }
+          //     // log(0);
+          //     // startTimer(nama_event, display);
+          // }
+
     }, 1000);
+}
+function next_event(){
+  clearInterval(f);
+  labas = 0;
+  i=i+3;
+  j=j+3;
+  k=k+3;
+  $.ajax({
+          url: "http://localhost:8000/get.php",
+          type: 'GET',
+          dataType: "JSON",
+          data: 'data',
+          async: false,
+          success: function (data) {
+              result = data.split(';').map(e => e.split(','));
+              xstring = data.split(';');
+               nama_event = parseInt(result[2]);
+               datas = JSON.stringify(data);
+              console.log(xstring[j+3]);
+  // alert(data);
+          }
+      });
+  var timer = 60*parseInt(result[5+i]);
+  if (xstring[k+3] == null){
+  $('.waktu_event').html("");
+  } else {
+    $('#container').html(xstring[j+3]);
+  $('.waktu_event').html(xstring[k+3]+" minutes");
+  }
+  clearInterval(start);
+  startTimer(timer, display);
+}
+function prev_event(){
+  clearInterval(f);
+  labas = 0;
+  i=i-3;
+  j=j-3;
+  k=k-3;
+  $.ajax({
+          url: "http://localhost:8000/get.php",
+          type: 'GET',
+          dataType: "JSON",
+          data: 'data',
+          async: false,
+          success: function (data) {
+              result = data.split(';').map(e => e.split(','));
+              xstring = data.split(';');
+               nama_event = parseInt(result[2]);
+               datas = JSON.stringify(data);
+              console.log(xstring[j+3]);
+  // alert(data);
+          }
+      });
+  var timer = 60*parseInt(result[5+i]);
+  if (xstring[k+3] == null){
+  $('.waktu_event').html("");
+  } else {
+    $('#container').html(xstring[j+3]);
+  $('.waktu_event').html(xstring[k+3]+" minutes");
+  }
+  clearInterval(start);
+  startTimer(timer, display);
+}
+function next(){
+  timer = duration, minutes, seconds;
+  start = setInterval(function () {
+
+     minutes = parseInt(timer / 60, 10)
+     seconds = parseInt(timer % 60, 10);
+
+     minutes = minutes < 10 ? "0" + minutes : minutes;
+     seconds = seconds < 10 ? "0" + seconds : seconds;
+
+     display.textContent = minutes + ":" + seconds;
+     --timer;
+     $.ajax({
+             url: "http://localhost:8000/get.php",
+             type: 'GET',
+             dataType: "JSON",
+             data: 'data',
+             async: false,
+             success: function (data) {
+                 result = data.split(';').map(e => e.split(','));
+                 xstring = data.split(';');
+                  nama_event = parseInt(result[2]);
+                  datas = JSON.stringify(data);
+                 console.log(xstring[j+3]);
+     // alert(data);
+             }
+         });
+         document.body.style.backgroundColor = "#0A0";
+       if (timer <= 29){
+         setTimeout(function(){
+             document.body.style.backgroundColor = "black";
+          },500)
+          document.body.style.backgroundColor = "red";
+       }
+     if (timer <= 0){
+       timer = 60*parseInt(result[5+i]);
+       $('#container').html(xstring[j+3]);
+       $('.waktu_event').html(xstring[k+3]+" minutes");
+       i=i+3;
+       j=j+3;
+       k=k+3;
+     }
+  }, 1000);
+}
+function pause(){
+  clearInterval(start);
+  // clearInterval(f);
+  // labas = 0;
+}
+function stop_timer(){
+  // clearInterval(start);
+  clearInterval(f);
+  // labas = 0;
+}
+labas = null;
+f = null;
+function elapsed(){
+  clearInterval(f);
+  clearInterval(start);
+  f=setInterval(function(){
+    labas=labas+1;
+    m = parseInt(labas / 60, 10)
+    s = parseInt(labas % 60, 10);
+
+    m = m < 10 ? "0" + m : m;
+    s = s < 10 ? "0" + s : s;
+      $('#time').html("-" +m + ":" + s);
+  },1000);
+}
+function resume(){
+  clearInterval(start);
+  startTimer(timer, display);
 }
 
 window.onload = func1 = function () {
@@ -577,20 +813,19 @@ window.onload = func1 = function () {
       success: function (data) {
           var result = data.split(';').map(e => e.split(','));
            nama_event = parseInt(result[2]);
-          $('#container').html(data);
+          // $('#container').html(data);
           // $('#container').val(data);
           console.log(nama_event);
           // alert(data);
       }
   });
-    var fiveMinutes = 60 * 5,
-        display = document.querySelector('#time');
-    startTimer(nama_event, display);
+    display = document.querySelector('#time');
+    startTimer(nama_event*60, display);
 };
-setInterval(test,500);
-  function test(){
-
-  }
+// setInterval(test,500);
+//   function test(){
+//
+//   }
 
 
 // });
